@@ -14,9 +14,9 @@ RUN pip install --no-cache-dir --upgrade pip \
 # Expose port
 EXPOSE 8000
 
-# Environment variables for auth (default values)
+# Default credentials (can be overridden later)
 ENV API_USERNAME=admin
 ENV API_PASSWORD=mypassword
 
 # Command to run the API
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "generate_image:app", "--host", "0.0.0.0", "--port", "8000"]
