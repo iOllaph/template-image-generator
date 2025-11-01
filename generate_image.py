@@ -1,10 +1,10 @@
+import os
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.responses import StreamingResponse
-import secrets  # for secure comparison
+import secrets
 import io
 from PIL import Image, ImageDraw, ImageFont
-import os
 from pydantic import BaseModel
 
 # Constants
@@ -15,9 +15,9 @@ app = FastAPI(title="Image Generator API with Auth")
 
 security = HTTPBasic()
 
-# Hardcoded user for simplicity
-USERNAME = "admin"
-PASSWORD = "mypassword"  # In production, use environment variables
+# Read credentials from environment variables
+USERNAME = os.getenv("API_USERNAME", "admin")
+PASSWORD = os.getenv("API_PASSWORD", "mypassword")
 
 class ImageRequest(BaseModel):
     title: str
