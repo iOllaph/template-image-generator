@@ -60,7 +60,7 @@ pip install -r requirements.txt
 4. **Run the API**
 
 ```bash
-uvicorn app:app --reload
+uvicorn generate_image:app --reload
 ```
 
 * API will be available at: `http://127.0.0.1:8000`
@@ -83,7 +83,19 @@ curl -u admin:mypassword -X POST "http://127.0.0.1:8000/generate" \
 --output output.png
 ```
 
-* The response is the **PNG image**.
+**Response Example (JSON)**
+
+```json
+{
+  "bytes": [137, 80, 78, 71, ...],
+  "base64": "iVBORw0KGgoAAAANSUhEUgAA..."
+}
+```
+
+* `base64` — The generated PNG image encoded as a Base64 string.
+* `bytes` — (Optional) Raw image bytes as a numeric array.
+
+---
 
 **Request Body (JSON)**
 

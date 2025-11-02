@@ -1,21 +1,17 @@
-import os
+import base64
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from fastapi.responses import StreamingResponse
+from pydantic import BaseModel
 import secrets
 import io
 from PIL import Image, ImageDraw, ImageFont
-from pydantic import BaseModel
+import os
 
-# Constants
+# Setup (as before)
 TEMPLATE_DIR = "templates"
 FONTS_DIR = "fonts"
-
-app = FastAPI(title="Image Generator API with Auth")
-
+app = FastAPI()
 security = HTTPBasic()
-
-# Read credentials from environment variables
 USERNAME = os.getenv("API_USERNAME", "admin")
 PASSWORD = os.getenv("API_PASSWORD", "mypassword")
 
@@ -69,6 +65,11 @@ def generate_image_bytes(title: str, subtitle: str, template_file="template.png"
 def generate_image(request: ImageRequest, authorized: bool = Depends(check_auth)):
     try:
         img_bytes = generate_image_bytes(request.title, request.subtitle)
-        return StreamingResponse(img_bytes, media_type="image/png")
+        # convert to Base64
+        base64_str = base64.b64encode(img_bytes.getvalue()).decode("utf-8")
+        return {
+            "bytes": list(img_bytes.getvalue()),  # optional raw bytes as list
+            "base64": base64_str
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
